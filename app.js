@@ -8,6 +8,7 @@ import taskRoutes from './routes/auth.js';
 import authRoutes from './routes/auth.js';
 import  authenticateToken  from './middleware/auth.js';
 import transactionRoutes from './routes/index.js';
+
 // Basic Authentication for the Application with task managementand transactions
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
