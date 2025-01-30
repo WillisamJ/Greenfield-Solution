@@ -1,24 +1,15 @@
-import express from 'express';
-import methodOverride from 'method-override'; 
-import cookieParser from 'cookie-parser';
-import { fileURLToPath } from 'url';
-import path from 'path';
-import 'dotenv/config';
-import taskRoutes from './routes/auth.js';
-import authRoutes from './routes/auth.js';
-import  authenticateToken  from './middleware/auth.js';
-import transactionRoutes from './routes/index.js';
-// Basic Authentication for the Application with task managementand transactions
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const express = require('express');
+const path = require('path');
+const methodOverride = require('method-override');
+const cookieParser = require('cookie-parser');
+const authenticateToken = require('./middleware/authenticateToken');
+const taskRoutes = require('./routes/taskRoutes');
+const authRoutes = require('./routes/authRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
 
 const app = express();
-const port = process.env.PORT || 2555;
+const port = process.env.PORT || 3000;
 
-// connect();
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
 
@@ -34,6 +25,14 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/index', authenticateToken, taskRoutes);
-app.use('/', authRoutes);
-app.use('/', transactionRoutes);
+app.use('/auth', authRoutes);
+app.use('/transactions', transactionRoutes);
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+app.listen(port, () => {
+    console.log(`Server listening at http://localhost:${port}`);
+});
